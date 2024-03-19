@@ -31,25 +31,28 @@ namespace PRSKulkarni.Controllers
             return await _context.Product.Include(p=> p.Vendor).ToListAsync();
             
         }
+        //Created a new method which is Action copied existing 
+        //Gane new name for Action
+        // Fixed route and parameters
+        // fixed code
 
         // GET: api/Products/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<Product>> GetProduct(int id)
-        {
-            //if (_context.Product == null)
-            //{
-            //    return NotFound();
-            //}
-            var product0 = await _context.Product.FindAsync(id);
-            var product = await _context.Product.Include( p => p.Vendor).FirstOrDefaultAsync(p=> p.ID == id);
+        //http://server/api/products/GetProductPartNumber/1/A100
+        //[HttpGet("get-product-by-part-number/{VendorID}/{partNum}")]
+        ////[HttpGet("getproductbypartnumber/{VendorID}/{partNum}")] we can do both the url
+        //public async Task<ActionResult<Product>> GetProductByPartNum(int vendorid, string partNum)
+        //{
+           
+        //    var product = await _context.Product.Include( p => p.Vendor)
+        //                 .FirstOrDefaultAsync(p=> p.PartNumber == partNum && p.VendorID == vendorid);
 
-            if (product == null)
-            {
-                return NotFound();
-            }
+        //    if (product == null)
+        //    {
+        //        return NotFound();
+        //    }
 
-            return product;
-        }
+        //    return product;
+        //}
 
         // PUT: api/Products/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
@@ -84,19 +87,19 @@ namespace PRSKulkarni.Controllers
 
         // POST: api/Products
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        
         [HttpPost]
         public async Task<ActionResult<Product>> PostProduct(Product product)
         {
-          if (_context.Product == null)
-          {
-              return Problem("Entity set 'PrsDbContext.Product'  is null.");
-          }
+            if (_context.Product == null)
+            {
+                return Problem("Entity set 'PrsDbContext.Product'  is null.");
+            }
             _context.Product.Add(product);
             await _context.SaveChangesAsync();
 
             return CreatedAtAction("GetProduct", new { id = product.ID }, product);
         }
-
         // DELETE: api/Products/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteProduct(int id)

@@ -20,7 +20,12 @@ var app = builder.Build();
 
 // Configure the HTTP request pipeline.
 
+// allows access to files like pictures and HTML. Defaults to wwwroot
+
+app.UseStaticFiles(); 
+
 app.UseHttpsRedirection();
+
 
 app.UseAuthorization();
 

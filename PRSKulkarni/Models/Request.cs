@@ -10,8 +10,8 @@ namespace PRSKulkarni.Models
         public int Id { get; set; }
 
         [Required]
-        public int UserID { get; set; }
-
+        public int UserId{ get; set; }
+        
         [Required]
         [StringLength (100)]
         public string Description { get; set; }

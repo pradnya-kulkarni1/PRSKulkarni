@@ -10,18 +10,19 @@ using PRSKulkarni.Models;
 namespace PRSKulkarni.Controllers
 {
     [Route("api/[controller]")]
-    [ApiController]
+    [ApiController] // converts to and from JSON on API calls
     public class VendorsController : ControllerBase
     {
         private readonly PrsDbContext _context;
 
+        // constructor
         public VendorsController(PrsDbContext context)
         {
             _context = context;
         }
 
         // GET: api/Vendors
-        [HttpGet]
+        [HttpGet] // routing engine finds action by this statement.
         public async Task<ActionResult<IEnumerable<Vendor>>> GetVendors()
         {
           if (_context.Vendors == null)
@@ -32,6 +33,32 @@ namespace PRSKulkarni.Controllers
 
         }
 
+        // api/vendors/code/{code}
+
+        //[HttpGet("code/{vendorcode}")]
+        //public ActionResult<Vendor> GetVendorByCode(string vendorcode)
+
+        //HttpHet : api.vendors/code
+        //Content-Type: application/json
+        //<blank line>
+        //"abc"
+
+        [HttpPost("code")]
+        public ActionResult GetVendorByCode([FromBody]string vendorcode)
+        {
+
+            //POST : api.vendors/code
+            //Content-Type: application/json
+            //<blank line>
+            //"abc"
+            var vendor = _context.Vendors.Where(v => v.Code == vendorcode).FirstOrDefault();
+            //              mine     mine   LINQ                            Entity Framework
+            if (vendor == null)
+            {
+                return NotFound();
+            }
+            return Ok(vendor);
+        }
         // GET: api/Vendors/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Vendor>> GetVendor(int id)

@@ -12,6 +12,7 @@
     "PRSKulkarni": {
       "commandName": "Project",
       "launchBrowser": true,
+      "launchUrl": "https://localhost:7267/index.html",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       },
