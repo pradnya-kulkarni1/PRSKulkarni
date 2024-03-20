@@ -25,11 +25,11 @@ namespace PRSKulkarni.Controllers
         [HttpGet] // routing engine finds action by this statement.
         public async Task<ActionResult<IEnumerable<Vendor>>> GetVendors()
         {
-          if (_context.Vendors == null)
-          {
-              return NotFound();
-          }
-            return  await _context.Vendors.Include(v => v.Products).ToListAsync();
+            if (_context.Vendors == null)
+            {
+                return NotFound();
+            }
+            return await _context.Vendors.Include(v => v.Products).ToListAsync();
 
         }
 
@@ -44,7 +44,7 @@ namespace PRSKulkarni.Controllers
         //"abc"
 
         [HttpPost("code")]
-        public ActionResult GetVendorByCode([FromBody]string vendorcode)
+        public ActionResult GetVendorByCode([FromBody] string vendorcode)
         {
 
             //POST : api.vendors/code
@@ -63,11 +63,11 @@ namespace PRSKulkarni.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<Vendor>> GetVendor(int id)
         {
-          if (_context.Vendors == null)
-          {
-              return NotFound();
-          }
-            
+            if (_context.Vendors == null)
+            {
+                return NotFound();
+            }
+
             return await _context.Vendors.FindAsync(id);
         }
 
@@ -107,16 +107,28 @@ namespace PRSKulkarni.Controllers
         [HttpPost]
         public async Task<ActionResult<Vendor>> PostVendor(Vendor vendor)
         {
-          if (_context.Vendors == null)
-          {
-              return Problem("Entity set 'PrsDbContext.Vendors'  is null.");
-          }
+            if (_context.Vendors == null)
+            {
+                return Problem("Entity set 'PrsDbContext.Vendors'  is null.");
+            }
             _context.Vendors.Add(vendor);
             await _context.SaveChangesAsync();
 
             return CreatedAtAction("GetVendor", new { id = vendor.Id }, vendor);
         }
 
+        [HttpPost("byCityState")]
+        public ActionResult GetVendorByCityState([FromBody] CityStateDTO location)
+            {
+                // find all vendors in a city and state
+                var vendors = _context.Vendors.Where(v => v.City == location.City &&
+                                                           v.State == location.State);
+            // writes SQL and our SQL is not case sensitive
+        // return all vendors in a city and state
+
+            return Ok(vendors); 
+
+            }
         // DELETE: api/Vendors/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteVendor(int id)

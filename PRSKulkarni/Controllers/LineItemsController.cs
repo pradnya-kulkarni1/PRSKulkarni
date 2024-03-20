@@ -52,6 +52,24 @@ namespace PRSKulkarni.Controllers
             return lineItem;
         }
 
+        [HttpGet("lines-for-pr/{Requestid}")]
+        public async Task<ActionResult> GetLineItemForPR(int Requestid)
+        {
+            if (_context.LineItems == null)
+            {
+                return NotFound();
+            }
+            // var lineItem = await _context.LineItems.FindAsync(id);
+
+            var lineItem = await _context.LineItems.Include(li => li.Product)
+                                                   .Where(li => li.RequestId == Requestid).ToListAsync();
+            if (lineItem == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(lineItem);
+        }
         // PUT: api/LineItems/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
@@ -67,6 +85,9 @@ namespace PRSKulkarni.Controllers
             try
             {
                 await _context.SaveChangesAsync();
+                DoRecalculateRequestTotal(lineItem.RequestId);
+                // recalculate the Request Total
+
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -79,7 +100,7 @@ namespace PRSKulkarni.Controllers
                     throw;
                 }
             }
-
+            
             return NoContent();
         }
 
@@ -94,8 +115,10 @@ namespace PRSKulkarni.Controllers
           }
             _context.LineItems.Add(lineItem);
             await _context.SaveChangesAsync();
+            DoRecalculateRequestTotal(lineItem.RequestId);
 
             return CreatedAtAction("GetLineItem", new { id = lineItem.Id }, lineItem);
+            
         }
 
         // DELETE: api/LineItems/5
@@ -112,8 +135,12 @@ namespace PRSKulkarni.Controllers
                 return NotFound();
             }
 
+            DoRecalculateRequestTotal(lineItem.RequestId);
+
             _context.LineItems.Remove(lineItem);
             await _context.SaveChangesAsync();
+            // recalculate the Request total
+            
 
             return NoContent();
         }
@@ -121,6 +148,30 @@ namespace PRSKulkarni.Controllers
         private bool LineItemExists(int id)
         {
             return (_context.LineItems?.Any(e => e.Id == id)).GetValueOrDefault();
+        }
+
+        // method calculaate total and update Request total
+
+        private decimal DoRecalculateRequestTotal(int requestId) {
+
+           
+            // calculate the total
+            var total = _context.LineItems.Include(p => p.Product)
+                                                   .Where(li => li.RequestId == requestId) 
+                                                   .Sum((li) => li.Quantity * li.Product.Price);
+
+            // find the request, update the Total and SaveChanges
+
+            var request1 = _context.Requests.Where(re => re.Id == requestId).FirstOrDefault();
+
+            request1.Total = total;
+
+            
+
+            _context.SaveChangesAsync();
+            return total;
+
+
         }
     }
 }

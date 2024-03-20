@@ -98,6 +98,30 @@ namespace PRSKulkarni.Controllers
             return CreatedAtAction("GetUser", new { id = user.Id }, user);
         }
 
+        [HttpPost("login")]
+        public ActionResult GetUserlogin ([FromBody] Userlogin login)
+        {
+
+            var logindetails = _context.Users.Where(u => u.Username == login.Username &&
+                                                       u.Password == login.Password).FirstOrDefault();
+            
+            if (logindetails == null)
+            {
+                
+                return NotFound();
+            }
+
+            //SafeUserDTO safeuser = new();
+            //safeuser.Id = logindetails.Id;
+            //safeuser.Username = logindetails.Username;
+            //safeuser.Firstname = logindetails.Firstname;
+            //safeuser.Lastname = logindetails.Lastname;
+
+            //return Ok(safeuser);
+            //return Ok(new { Firstname = logindetails.Firstname, Lastname = logindetails.Lastname});
+            return Ok(logindetails);
+
+        }
         // DELETE: api/Users/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteUser(int id)
