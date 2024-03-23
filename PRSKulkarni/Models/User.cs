@@ -23,10 +23,7 @@ namespace PRSKulkarni.Models
         [StringLength(20)]
         public string Firstname { get; set; }
 
-        //[NotMapped]
-
-        //public string FullName { get { return Firstname + " " + Lastname; }}
-        //[Required]
+       
         [StringLength(20)]
         public string Lastname { get; set; }
 
@@ -37,11 +34,11 @@ namespace PRSKulkarni.Models
         public bool Reviewer { get; set; }
         public bool Admin { get; set; }
 
-
+        // Navigtion Property to get Request as per UserID
         public List<Request>? Requests { get; set; }
 
     }
-    /*
+    /* command in SQL
      * create table [User]
 (
  Id int primary key identity(1,1), 

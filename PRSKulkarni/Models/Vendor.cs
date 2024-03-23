@@ -2,13 +2,16 @@
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
 
+// Controller will refer to this model Vendor for getting Vendor details
 namespace PRSKulkarni.Models
+
 {
     [Table("Vendor")]
     public class Vendor
     {
         [Key]
-        public int Id { get; set; }
+        public int Id { get; set; } 
+        // Vendor ID is Primary key here and foreign key to Product Table
 
         [Required]
         [StringLength(10)]
@@ -39,13 +42,14 @@ namespace PRSKulkarni.Models
 
         public string? Phone { get; set; }
 
-        public string? Email { get; set; }
+        public string? Email { get; set; } // Email can be Null
 
-        //[JsonIgnore]
+        //Navigation property to get details of Product as per VendorID
         public List<Product>? Products { get; set; }
     }
 }
-/*
+/* SQL Query for reference
+ * 
  * CREATE TABLE Vendor(
 Id int primary key not null identity(1,1),
 Code Varchar(10) Unique not null,

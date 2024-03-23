@@ -31,7 +31,10 @@ namespace PRSKulkarni.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Request>>> GetRequests()
         {
-          if (_context.Requests == null)
+            // async method involves executing operations in the background
+            // so that the main thread can continue its own operations.
+
+            if (_context.Requests == null)
           {
               return NotFound();
           }
@@ -131,7 +134,7 @@ namespace PRSKulkarni.Controllers
 
             req.ReasonForRejection = Reason;
 
-            req.Status = statusRejected;
+            req.Status = statusRejected; //updating Status of request as entered in the Body
 
             //if(req.Status.ToUpper() == "REJECTED")
             try
@@ -170,6 +173,6 @@ namespace PRSKulkarni.Controllers
         private bool RequestExists(int id)
         {
             return (_context.Requests?.Any(e => e.Id == id)).GetValueOrDefault();
-        }
+        }//this method is called in PUT action to get the Request when ID is given
     }
 }

@@ -4,7 +4,7 @@ namespace PRSKulkarni.Models
 {
     [Table("LineItem")]
     public class LineItem
-    {
+    { // this model gives RequestID, ProductID for product and Quantity of products ordered.
         [Key]
         public int Id { get; set; }
 

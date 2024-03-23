@@ -38,21 +38,21 @@ namespace PRSKulkarni.Controllers
 
         // GET: api/Products/5
         //http://server/api/products/GetProductPartNumber/1/A100
-        //[HttpGet("get-product-by-part-number/{VendorID}/{partNum}")]
-        ////[HttpGet("getproductbypartnumber/{VendorID}/{partNum}")] we can do both the url
-        //public async Task<ActionResult<Product>> GetProductByPartNum(int vendorid, string partNum)
-        //{
-           
-        //    var product = await _context.Product.Include( p => p.Vendor)
-        //                 .FirstOrDefaultAsync(p=> p.PartNumber == partNum && p.VendorID == vendorid);
+        [HttpGet("get-product-by-part-number/{VendorID}/{partNum}")]
+     //displays details of Product and Vendor when VendorID and partnumber are given
+        public async Task<ActionResult<Product>> GetProductByPartNum(int vendorid, string partNum)
+        {
 
-        //    if (product == null)
-        //    {
-        //        return NotFound();
-        //    }
+            var product = await _context.Product.Include(p => p.Vendor)
+                         .FirstOrDefaultAsync(p => p.PartNumber == partNum && p.VendorID == vendorid);
 
-        //    return product;
-        //}
+            if (product == null)
+            {
+                return NotFound();
+            }
+
+            return product;
+        }
 
         // PUT: api/Products/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
@@ -86,9 +86,9 @@ namespace PRSKulkarni.Controllers
         }
 
         // POST: api/Products
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+    
         
-        [HttpPost]
+        [HttpPost] //we can insert new data into Product Table
         public async Task<ActionResult<Product>> PostProduct(Product product)
         {
             if (_context.Product == null)

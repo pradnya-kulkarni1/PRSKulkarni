@@ -10,7 +10,7 @@ builder.Services.AddControllers()
      opt.JsonSerializerOptions.ReferenceHandler =
        System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles;
  });
-builder.Services.AddControllers();
+
 builder.Services.AddDbContext<PrsDbContext>(
        // lambda
        options => options.UseSqlServer(builder.Configuration.GetConnectionString("PRSConnectionstring"))

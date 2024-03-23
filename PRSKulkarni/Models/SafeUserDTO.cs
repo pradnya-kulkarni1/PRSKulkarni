@@ -1,8 +1,9 @@
 ﻿namespace PRSKulkarni.Models
 {
     // Return only what is needed for the user login action
-    public class SafeUserDTO
+    public class SafeUserDTO 
     {
+        // this object is created to start Login action
         public int Id { get; set; }
 
        

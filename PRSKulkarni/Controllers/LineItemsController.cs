@@ -14,8 +14,8 @@ namespace PRSKulkarni.Controllers
     public class LineItemsController : ControllerBase
     {
         private readonly PrsDbContext _context;
-
-        public LineItemsController(PrsDbContext context)
+        //we can add / Get / Update / Delete RequestID, ProductID for product and Quantity of products ordered.
+        public LineItemsController(PrsDbContext context) // constructor
         {
             _context = context;
         }
@@ -52,7 +52,8 @@ namespace PRSKulkarni.Controllers
             return lineItem;
         }
 
-        [HttpGet("lines-for-pr/{Requestid}")]
+        [HttpGet("lines-for-pr/{Requestid}")] 
+        // This method shows Request and Product for a LineItem
         public async Task<ActionResult> GetLineItemForPR(int Requestid)
         {
             if (_context.LineItems == null)
@@ -71,7 +72,7 @@ namespace PRSKulkarni.Controllers
             return Ok(lineItem);
         }
         // PUT: api/LineItems/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+     
         [HttpPut("{id}")]
         public async Task<IActionResult> PutLineItem(int id, LineItem lineItem)
         {
@@ -105,7 +106,7 @@ namespace PRSKulkarni.Controllers
         }
 
         // POST: api/LineItems
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        
         [HttpPost]
         public async Task<ActionResult<LineItem>> PostLineItem(LineItem lineItem)
         {
@@ -150,12 +151,12 @@ namespace PRSKulkarni.Controllers
             return (_context.LineItems?.Any(e => e.Id == id)).GetValueOrDefault();
         }
 
-        // method calculaate total and update Request total
+        // method calculate total and update Request total
 
         private decimal DoRecalculateRequestTotal(int requestId) {
 
            
-            // calculate the total
+            // calculate the sum of quantity times price of a product for all each request
             var total = _context.LineItems.Include(p => p.Product)
                                                    .Where(li => li.RequestId == requestId) 
                                                    .Sum((li) => li.Quantity * li.Product.Price);

@@ -33,31 +33,24 @@ namespace PRSKulkarni.Controllers
 
         }
 
-        // api/vendors/code/{code}
-
-        //[HttpGet("code/{vendorcode}")]
-        //public ActionResult<Vendor> GetVendorByCode(string vendorcode)
-
-        //HttpHet : api.vendors/code
-        //Content-Type: application/json
-        //<blank line>
-        //"abc"
+        
 
         [HttpPost("code")]
         public ActionResult GetVendorByCode([FromBody] string vendorcode)
         {
 
-            //POST : api.vendors/code
+            //POST : api.vendors/code.
+            //This method inserts into Vendor table when code is entered in the body
             //Content-Type: application/json
-            //<blank line>
-            //"abc"
+
             var vendor = _context.Vendors.Where(v => v.Code == vendorcode).FirstOrDefault();
-            //              mine     mine   LINQ                            Entity Framework
+ //     _context is a private property of PRSDbcontext type      LINQ      Entity Framework
+
             if (vendor == null)
             {
                 return NotFound();
             }
-            return Ok(vendor);
+            return Ok(vendor); // Ok() is a method from Entity Framework which returns the object
         }
         // GET: api/Vendors/5
         [HttpGet("{id}")]
@@ -71,6 +64,7 @@ namespace PRSKulkarni.Controllers
             return await _context.Vendors.FindAsync(id);
         }
 
+        // PUT updates or Alters contents of Vendor Table
         // PUT: api/Vendors/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
