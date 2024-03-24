@@ -149,6 +149,30 @@ namespace PRSKulkarni.Controllers
             //return CreatedAtAction("GetRequest", new { id = requestid }, req);
             return req;
         }
+        [HttpPost("approve/{RequestId}")]
+        public async Task<ActionResult<Request>>Approve(int requestid) 
+        {
+            var req = await _context.Requests.FindAsync(requestid);
+            if (req == null)
+            {
+                return NotFound();
+            }
+
+            req.Status = statusApproved; //updating Status of request as entered in the Body
+
+            
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception ex)
+
+            {
+                return Problem(ex.Message);
+            }
+            //return CreatedAtAction("GetRequest", new { id = requestid }, req);
+            return req;
+        }
 
         // DELETE: api/Requests/5
         [HttpDelete("{id}")]
