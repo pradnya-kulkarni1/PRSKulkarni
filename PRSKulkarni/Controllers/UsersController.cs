@@ -111,15 +111,15 @@ namespace PRSKulkarni.Controllers
                 return NotFound();
             }
 
-            SafeUserDTO safeuser = new();
-            safeuser.Id = logindetails.Id;
-            safeuser.Username = logindetails.Username;
-            safeuser.Firstname = logindetails.Firstname;
-            safeuser.Lastname = logindetails.Lastname;
+            //SafeUserDTO safeuser = new();
+            //safeuser.Id = logindetails.Id;
+            //safeuser.Username = logindetails.Username;
+            //safeuser.Firstname = logindetails.Firstname;
+            //safeuser.Lastname = logindetails.Lastname;
 
-            return Ok(safeuser);
-           // return Ok(new { Firstname = logindetails.Firstname, Lastname = logindetails.Lastname });
-            //return Ok(logindetails);
+           //return Ok(safeuser);
+            //return Ok(new { Firstname = logindetails.Firstname, Lastname = logindetails.Lastname });
+            return Ok(logindetails);
 
         }
         // DELETE: api/Users/5

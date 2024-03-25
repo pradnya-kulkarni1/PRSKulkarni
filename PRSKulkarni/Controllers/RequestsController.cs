@@ -173,6 +173,36 @@ namespace PRSKulkarni.Controllers
             //return CreatedAtAction("GetRequest", new { id = requestid }, req);
             return req;
         }
+        // This method reviews the request and if total is less than 50, it approves otherwise
+        //sets the status as Review
+
+        [HttpPost("Review/{RequestId}")]
+        public async Task<ActionResult<Request>> ReviewAndApprove(int requestid)
+        {
+            var req = await _context.Requests.FindAsync(requestid);
+            if (req == null)
+            {
+                return NotFound();
+            }
+            
+            if (req.Total<=50.00m)
+            {
+                req.Status = statusApproved; 
+            }
+            else req.Status = statusReview;
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception ex)
+
+            {
+                return Problem(ex.Message);
+            }
+            //return CreatedAtAction("GetRequest", new { id = requestid }, req);
+            return req;
+        }
 
         // DELETE: api/Requests/5
         [HttpDelete("{id}")]
