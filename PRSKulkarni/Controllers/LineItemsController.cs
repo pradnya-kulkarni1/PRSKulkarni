@@ -86,7 +86,7 @@ namespace PRSKulkarni.Controllers
             try
             {
                 await _context.SaveChangesAsync();
-                DoRecalculateRequestTotal(lineItem.RequestId);
+                await DoRecalculateRequestTotal(lineItem.RequestId);
                 // recalculate the Request Total
 
             }
@@ -116,7 +116,7 @@ namespace PRSKulkarni.Controllers
           }
             _context.LineItems.Add(lineItem);
             await _context.SaveChangesAsync();
-            DoRecalculateRequestTotal(lineItem.RequestId);
+            await DoRecalculateRequestTotal(lineItem.RequestId);
 
             return CreatedAtAction("GetLineItem", new { id = lineItem.Id }, lineItem);
             
@@ -136,12 +136,15 @@ namespace PRSKulkarni.Controllers
                 return NotFound();
             }
 
-            DoRecalculateRequestTotal(lineItem.RequestId);
-
+            int requestId = lineItem.RequestId;
             _context.LineItems.Remove(lineItem);
+
+
+
+
             await _context.SaveChangesAsync();
             // recalculate the Request total
-            
+            await DoRecalculateRequestTotal(requestId);
 
             return NoContent();
         }
@@ -153,25 +156,45 @@ namespace PRSKulkarni.Controllers
 
         // method calculate total and update Request total
 
-        private decimal DoRecalculateRequestTotal(int requestId) {
+        //private decimal DoRecalculateRequestTotal(int requestId) {
 
-           
+
+        //    // calculate the sum of quantity times price of a product for all each request
+        //    var total = _context.LineItems.Include(p => p.Product)
+        //                                           .Where(li => li.RequestId == requestId) 
+        //                                           .Sum((li) => li.Quantity * li.Product.Price);
+
+        //    // find the request, update the Total and SaveChanges
+
+        //    var request1 = _context.Requests.Where(re => re.Id == requestId).FirstOrDefault();
+
+        //    request1.Total = total;
+
+
+
+        //    _context.SaveChangesAsync();
+        //    return total;
+
+        private async Task<decimal>DoRecalculateRequestTotal(int requestId)
+        {
+
+
             // calculate the sum of quantity times price of a product for all each request
-            var total = _context.LineItems.Include(p => p.Product)
-                                                   .Where(li => li.RequestId == requestId) 
+            var total =  _context.LineItems.Include(p => p.Product)
+                                                   .Where(li => li.RequestId == requestId)
                                                    .Sum((li) => li.Quantity * li.Product.Price);
 
             // find the request, update the Total and SaveChanges
 
-            var request1 = _context.Requests.Where(re => re.Id == requestId).FirstOrDefault();
+            var request1 = await _context.Requests.Where(re => re.Id == requestId).FirstOrDefaultAsync();
 
-            request1.Total = total;
 
-            
+             request1.Total = total;
 
-            _context.SaveChangesAsync();
-            return total;
 
+
+            await _context.SaveChangesAsync();
+            return  total;
 
         }
     }

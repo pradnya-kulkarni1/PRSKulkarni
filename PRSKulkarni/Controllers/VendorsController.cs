@@ -64,6 +64,20 @@ namespace PRSKulkarni.Controllers
             return await _context.Vendors.FindAsync(id);
         }
 
+        [HttpGet("VendorByCityState")]
+        public async Task<ActionResult<Vendor>> GetVendorByCityStateDTO([FromBody] CityStateDTO citystate)
+        {
+            if (_context.Vendors == null)
+            {
+                return NotFound();
+            }
+            var vendors = await _context.Vendors.Where(v => v.City == citystate.City &&
+                                                           v.State == citystate.State).FirstAsync(); 
+
+            return Ok(vendors);
+        }
+
+
         // PUT updates or Alters contents of Vendor Table
         // PUT: api/Vendors/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754

@@ -20,15 +20,34 @@ namespace PRSKulkarni.Controllers
             _context = context;
         }
 
+        // GET: api/Products/5
+        [HttpGet("{id}")]
+        public async Task<ActionResult<Product>> GetProductOne(int id)
+        {
+            if (_context.Products == null)
+            {
+                return NotFound();
+            }
+            // var user = await _context.Users.FindAsync(id);
+
+            var product = await _context.Products.FirstOrDefaultAsync(u => u.ID == id);
+
+            if (product == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(product);
+        }
         // GET: api/Products
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Product>>> GetProduct()
         {
-          if (_context.Product == null)
+          if (_context.Products == null)
           {
               return NotFound();
           }
-            return await _context.Product.Include(p=> p.Vendor).ToListAsync();
+            return await _context.Products.Include(p=> p.Vendor).ToListAsync();
             
         }
         //Created a new method which is Action copied existing 
@@ -43,7 +62,7 @@ namespace PRSKulkarni.Controllers
         public async Task<ActionResult<Product>> GetProductByPartNum(int vendorid, string partNum)
         {
 
-            var product = await _context.Product.Include(p => p.Vendor)
+            var product = await _context.Products.Include(p => p.Vendor)
                          .FirstOrDefaultAsync(p => p.PartNumber == partNum && p.VendorID == vendorid);
 
             if (product == null)
@@ -91,11 +110,11 @@ namespace PRSKulkarni.Controllers
         [HttpPost] //we can insert new data into Product Table
         public async Task<ActionResult<Product>> PostProduct(Product product)
         {
-            if (_context.Product == null)
+            if (_context.Products == null)
             {
                 return Problem("Entity set 'PrsDbContext.Product'  is null.");
             }
-            _context.Product.Add(product);
+            _context.Products.Add(product);
             await _context.SaveChangesAsync();
 
             return CreatedAtAction("GetProduct", new { id = product.ID }, product);
@@ -104,17 +123,17 @@ namespace PRSKulkarni.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteProduct(int id)
         {
-            if (_context.Product == null)
+            if (_context.Products == null)
             {
                 return NotFound();
             }
-            var product = await _context.Product.FindAsync(id);
+            var product = await _context.Products.FindAsync(id);
             if (product == null)
             {
                 return NotFound();
             }
 
-            _context.Product.Remove(product);
+            _context.Products.Remove(product);
             await _context.SaveChangesAsync();
 
             return NoContent();
@@ -122,7 +141,7 @@ namespace PRSKulkarni.Controllers
 
         private bool ProductExists(int id)
         {
-            return (_context.Product?.Any(e => e.ID == id)).GetValueOrDefault();
+            return (_context.Products?.Any(e => e.ID == id)).GetValueOrDefault();
         }
     }
 }
