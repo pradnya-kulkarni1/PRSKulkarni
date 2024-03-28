@@ -1,0 +1,128 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>PRS New User</title>
+</head>
+<body>
+    <style>
+        label {
+            display: inline-block;
+            width: 100px;
+            text-align: right;
+            color: blue;
+            background-color: lightgray;
+        }
+
+        input {
+            width: 200px;
+            margin-bottom: 10px;
+            color: darkblue;
+        }
+
+        #userNameLabel {
+            font-weight: bold;
+        }
+    </style>
+    <h1>Create a New User by an Administrator</h1>
+    <form id="newUserForm">
+        <label id ="userNameLabel">User Name</label>
+        <input type="text" id="userName" name="userName" value="Joy0000" />
+        <br>
+        <label>Password</label>
+        <input type="password" id=" password " name="password" value="password" />
+        <br />
+        <!-- firstName, lastName, reviewer, admin, phone, email-->
+        <label>First Name</label>
+        <input type="text" id="firstName" name="firstName" value="AUM" />
+        <br />
+        <label>Last Name</label>
+        <input type="text" id="lastName" name="lastName" value="Ghosh" />
+        <br />
+        <label>Is reviewer</label>
+        <input type="text" id="reviewer" name="reviewer" value="" />
+        <br />
+        <label>Is admin</label>
+        <input type="text" id="admin" name="admin" value="false" />
+        <br />
+        <label>phone</label>
+        <input type="text" id="phone" name="phone" value="123-555-9865" />
+        <br />
+        <label>email</label>
+        <input type="text" id="email" name="email" value="abcd@gmail.com" />
+        <br />
+
+
+
+
+    </form>
+
+    <button onclick="SaveUser()">Save</button>
+    <h3>JSON being sent: </h3>
+    <div id="jsontext"></div>
+    <h3>Readystate messages</h3>
+    <div id="readystate"></div>
+
+    <script>
+        function SaveUser() {
+            let theForm = document.getElementById("newUserForm");
+
+           // alert(theForm.elements.item(0).value);
+
+            let theData = new FormData(theForm);
+            //alert("Welcome " + theData.get("firstName"));
+
+            let readystatemsg = document.getElementById("readystate");
+
+            // convert to JSON - stollen from mozilla.org
+            
+            var jsonString = JSON.stringify(Object.fromEntries(theData.entries()));
+            
+
+            //clean the JSON
+
+            jsonString = jsonString.replaceAll("\"false\"", "false");
+            jsonString = jsonString.replaceAll("\"true\"", "true");
+            jsonString = jsonString.replaceAll("\"yes\"", "true");
+            jsonString = jsonString.replaceAll("\"no\"", "false");
+
+            document.getElementById('jsontext').innerText = jsonString;
+
+            // setup HTTP request
+            let xhr = new XMLHttpRequest();
+
+            //hxr.open('POST', 'http://localhost:5267/api/users');
+
+            xhr.open('POST', 'api/users');
+            xhr.setRequestHeader("Content-Type", "application/json");
+
+           
+            xhr.onreadystatechange = function () {
+                // console.log(xhr.readyState.toString())
+                switch (xhr.readyState) {
+                    case XMLHttpRequest.OPENED: readystatemsg.innerHTML += "Open (1) <br>"; break;
+                    case XMLHttpRequest.HEADERS_RECEIVED: readystatemsg.innerHTML += "Headers Received (2) <br>"; break;
+                    case XMLHttpRequest.LOADING: readystatemsg.innerHTML += "Loading (3) <br>"; break;
+
+                    case XMLHttpRequest.DONE:
+                        // display a status message
+                        readystatemsg.innerHTML += "Done (4) <br>";
+                        alert("Call complete.\n\n" + xhr.response.toString());
+                        //form.reset();
+                        //reset form after AJAX success or do something else
+                        break;
+
+                    default:
+                        readystatemsg += xhr.readyState + " (other)<br>"; break;
+                        break;
+                }
+            }
+            //send the form data to the user
+        
+            xhr.send(jsonString); // jsonString is sent as the body of the request
+            alert("Done!");
+        }
+    </script>
+
+</body>
+</html>

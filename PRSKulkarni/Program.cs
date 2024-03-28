@@ -21,7 +21,8 @@ var app = builder.Build();
 // Configure the HTTP request pipeline.
 
 // allows access to files like pictures and HTML. Defaults to wwwroot
-
+// app.UseCors(CorsOptions.AllowAll);
+// allows access to files like pictures and HTML. Deault to wwwroot
 app.UseStaticFiles(); 
 
 app.UseHttpsRedirection();

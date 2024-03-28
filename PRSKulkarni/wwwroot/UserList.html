@@ -1,0 +1,41 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Users List</title>
+
+    <script src="https://ajax.aspnetcdn.com/ajax/jquery/jquery-3.6.0.js"></script>
+    <style>
+        td{border: 2px solid black;
+
+        }
+    </style>
+</head>
+<body>
+    <h1>User List</h1>
+    <table id="theList">
+        <tr> <th>First Name</th> <th>Last Name</th><th>Password</th>
+       
+    </table>
+    <script>
+        let userList = document.getElementById("theList");
+        $.getJSON("api/users",
+            function (data) {
+                console.log(data)
+
+                for (i = 0; i < data.length; i++) {
+                    let user = data[i];
+                    console.log(user.firstname);
+                    userList.innerHTML += "<tr><td>"
+                        + user.firstname + "</td><td>"
+                        + user.lastname + "</td><td>"
+                        + user.password + "</td></tr>";
+                }
+            });
+            //{ alert(JSON.stringity(data)) }).fail(alert("Error!"));
+    </script>
+
+
+
+</body>
+</html>

@@ -1,0 +1,42 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Users List</title>
+
+    <script src="https://ajax.aspnetcdn.com/ajax/jquery/jquery-3.6.0.js"></script>
+    <style>
+        td {
+            border: 2px solid black;
+        }
+    </style>
+</head>
+<body>
+    <h1> Requests List </h1>
+    <table id="theList">
+        <tr> <th>Request Id</th><th>Descriptioin </th><th> Date Needed </th><th>Total Amount</th>
+        <th>User Name</th><th>Request Status</th>
+</table>
+    <script>
+        let userList = document.getElementById("theList");
+        $.getJSON("api/requests",
+            function (data) {
+                console.log(data)
+
+                for (i = 0; i < data.length; i++) {
+                    let user = data[i];
+                    console.log(user.Id);
+                    userList.innerHTML += "<tr><td>"
+                        + user.id + "</td><td>"
+                        + user.description + "</td><td>"
+                        + user.dateneeded + "</td><td>"
+                        + user.total + "</td><td>"
+                        + user.user.firstname + "</td><td>"
+                         + user.status+"</td><tr>";
+                }
+            });
+
+    </script>
+   
+</body>
+</html>
